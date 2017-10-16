@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ApplicationManifest xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ApplicationTypeName="SFContactsApplicationType" ApplicationTypeVersion="1.0.0" xmlns="http://schemas.microsoft.com/2011/01/fabric">
+  <Parameters>
+    <Parameter Name="SFContacts.SessionKeys_MinReplicaSetSize" DefaultValue="3" />
+    <Parameter Name="SFContacts.SessionKeys_PartitionCount" DefaultValue="1" />
+    <Parameter Name="SFContacts.SessionKeys_TargetReplicaSetSize" DefaultValue="3" />
+    <Parameter Name="SFContacts.UI_InstanceCount" DefaultValue="-1" />
+    <Parameter Name="UserSessionActorService_PartitionCount" DefaultValue="10" />
+    <Parameter Name="UserSessionActorService_MinReplicaSetSize" DefaultValue="3" />
+    <Parameter Name="UserSessionActorService_TargetReplicaSetSize" DefaultValue="3" />
+  </Parameters>
+  <!-- Import the ServiceManifest from the ServicePackage. The ServiceManifestName and ServiceManifestVersion 
+       should match the Name and Version attributes of the ServiceManifest element defined in the 
+       ServiceManifest.xml file. -->
+  <ServiceManifestImport>
+    <ServiceManifestRef ServiceManifestName="SFContacts.UserSessionPkg" ServiceManifestVersion="1.0.0" />
+  </ServiceManifestImport>
+  <ServiceManifestImport>
+    <ServiceManifestRef ServiceManifestName="SFContacts.SessionKeysPkg" ServiceManifestVersion="1.0.0" />
+    <ConfigOverrides />
+  </ServiceManifestImport>
+  <ServiceManifestImport>
+    <ServiceManifestRef ServiceManifestName="SFContacts.UIPkg" ServiceManifestVersion="1.0.0" />
+    <ConfigOverrides />
+  </ServiceManifestImport>
+  <DefaultServices>
+    <!-- The section below creates instances of service types, when an instance of this 
+         application type is created. You can also create one or more instances of service type using the 
+         ServiceFabric PowerShell module.
+         
+         The attribute ServiceTypeName below must match the name defined in the imported ServiceManifest.xml file. -->
+    <Service Name="SFContacts.SessionKeys">
+      <StatefulService ServiceTypeName="SFContacts.SessionKeysType" TargetReplicaSetSize="[SFContacts.SessionKeys_TargetReplicaSetSize]" MinReplicaSetSize="[SFContacts.SessionKeys_MinReplicaSetSize]">
+        <UniformInt64Partition PartitionCount="[SFContacts.SessionKeys_PartitionCount]" LowKey="-9223372036854775808" HighKey="9223372036854775807" />
+      </StatefulService>
+    </Service>
+    <Service Name="SFContacts.UI" ServicePackageActivationMode="ExclusiveProcess">
+      <StatelessService ServiceTypeName="SFContacts.UIType" InstanceCount="[SFContacts.UI_InstanceCount]">
+        <SingletonPartition />
+      </StatelessService>
+    </Service>
+    <Service Name="UserSessionActorService" GeneratedIdRef="9ea82191-785a-43fa-a3f2-ea1ce941f8c1|Persisted">
+      <StatefulService ServiceTypeName="UserSessionActorServiceType" TargetReplicaSetSize="[UserSessionActorService_TargetReplicaSetSize]" MinReplicaSetSize="[UserSessionActorService_MinReplicaSetSize]">
+        <UniformInt64Partition PartitionCount="[UserSessionActorService_PartitionCount]" LowKey="-9223372036854775808" HighKey="9223372036854775807" />
+      </StatefulService>
+    </Service>
+  </DefaultServices>
+</ApplicationManifest>

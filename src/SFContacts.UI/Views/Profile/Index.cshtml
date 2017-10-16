@@ -1,0 +1,28 @@
+@using SFContacts.SessionKeys.Domain;
+
+@{
+    ViewData["Title"] = "Index";
+    var currentUser = ViewData["currentUser"];
+    var currentClaim = ViewData["currentClaim"];
+    var keys = ViewData["ProtectionKeys"] as IEnumerable<SessionKeyItem>;
+    var cookies = ViewData["Cookies"] as Dictionary<string, string>;
+}
+
+<h2>Current User:</h2> @currentUser
+<h2>Current Claim:</h2> @currentClaim
+
+<h2>Cookies:</h2>
+<hr />
+@foreach (var cookie in cookies) {
+    <p>Key-> @cookie.Key</p>
+    <p>Value-> @cookie.Value</p>
+    <hr />
+}
+
+<h2>Keys:</h2>
+<hr />
+@foreach (var keyItem in keys) {
+    <p>Key-> @keyItem.Key</p>
+    <p>Value-> @keyItem.Value</p>
+    <hr />
+}

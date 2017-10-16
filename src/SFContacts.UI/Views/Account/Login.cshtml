@@ -1,0 +1,29 @@
+@model SFContacts.UI.Models.LoginModel
+
+@{
+    ViewData["Title"] = "Login";
+    var cookies = ViewData["Cookies"] as Dictionary<string, string>;
+}
+<br />
+<h2>Cookies:</h2>
+<hr />
+@foreach (var cookie in cookies) {
+    <p>Key-> @cookie.Key</p>
+    <p>Value-> @cookie.Value</p>
+    <hr />
+}
+<br />
+<div class="wrapper">
+
+    @using (Html.BeginForm("Login", "Account", FormMethod.Post, new { @class = "form-signin" })) {
+
+        <h2 class="form-signin-heading">Please login</h2>
+        <input type="text" class="form-control" name="username" placeholder="Username" required="" autofocus="" />
+        <input type="password" class="form-control" name="password" placeholder="Password" required="" />
+        <br />
+        <button class="btn btn-lg btn-primary" type="submit">Login</button>
+        <br />
+        @Html.ValidationMessage("LogOnError");
+    }
+
+</div>
